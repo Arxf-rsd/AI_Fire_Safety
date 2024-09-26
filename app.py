@@ -21,6 +21,13 @@ def play_video(video_source):
             camera.release()
             break
 
+def play_live_camera():
+    image = camera_input_live()
+    uploaded_image = PIL.Image.open(image)
+    uploaded_image_cv = cv2.cvtColor(numpy.array(uploaded_image), cv2.COLOR_RGB2BGR)
+    visualized_image = utils.predict_image(uploaded_image_cv, conf_threshold)
+    st.image(visualized_image, channels = "BGR")
+
 st.set_page_config(
     page_title="Fire/smoke-detection",
     page_icon="🔥",
@@ -65,9 +72,4 @@ if source_radio == "VIDEO":
 
 
 if source_radio == "WEBCAM":
-    input = camera_input_live()
-    uploaded_image = Image.open(input)
-    uploaded_image_cv = cv2.cvtColor(np.array(uploaded_image), cv2.COLOR_RGB2BGR)
-    boxes, resized_image = utils.predict_image(uploaded_image_cv, conf_threshold)
-    visualized_image = utils.convert_result_to_image(uploaded_image_cv, resized_image, boxes, conf_labels=False)
-    st.image(visualized_image, channels = "RGB")
+    play_live_camera()
